@@ -26,4 +26,55 @@ public class Flight {
 
     @Column(name = "return_date", columnDefinition = "TIMESTAMP")
     LocalDateTime returnDate;
+
+    public Flight() {
+    }
+
+    public Flight(String id, Airport departureAirport, Airport landingAirport, LocalDateTime departureDate, LocalDateTime returnDate) {
+        this.id = id;
+        this.departureAirport = departureAirport;
+        this.landingAirport = landingAirport;
+        this.departureDate = departureDate;
+        this.returnDate = returnDate;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Airport getDepartureAirport() {
+        return departureAirport;
+    }
+
+    public void setDepartureAirport(Airport departureAirport) {
+        this.departureAirport = departureAirport;
+    }
+
+    public Airport getLandingAirport() {
+        return landingAirport;
+    }
+
+    public void setLandingAirport(Airport landingAirport) {
+        this.landingAirport = landingAirport;
+    }
+
+    public LocalDateTime getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(LocalDateTime departureDate) {
+        this.departureDate = departureDate;
+    }
+
+    public LocalDateTime getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(LocalDateTime returnDate) {
+        this.returnDate = returnDate;
+    }
 }

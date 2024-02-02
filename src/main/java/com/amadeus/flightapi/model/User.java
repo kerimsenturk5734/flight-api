@@ -2,13 +2,16 @@ package com.amadeus.flightapi.model;
 
 import com.amadeus.flightapi.model.enums.UserRole;
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
     @Column(name = "id")
-    Long id;
+    @GenericGenerator(name = "user_id", strategy = "com.amadeus.flightapi.model.UUIDGenerator")
+    @GeneratedValue(generator = "user_id")
+    String id;
     @Column(name = "name")
     String name;
     @Column(name = "surname")
@@ -22,7 +25,7 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, String surname, String password, UserRole role) {
+    public User(String id, String name, String surname, String password, UserRole role) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -30,11 +33,11 @@ public class User {
         this.role = role;
     }
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setUserId(Long id) {
+    public void setUserId(String id) {
         this.id = id;
     }
 
