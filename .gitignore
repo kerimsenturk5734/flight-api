@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Sensitive Content ###
+src/main/resources/secrets.properties
