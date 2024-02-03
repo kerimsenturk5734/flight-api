@@ -2,6 +2,7 @@ package com.amadeus.flightapi.service;
 
 import com.amadeus.flightapi.dto.AirportDto;
 import com.amadeus.flightapi.dto.converter.AirportAndAirportDtoConverter;
+import com.amadeus.flightapi.dto.request.AirportCreateRequest;
 import com.amadeus.flightapi.dto.request.AirportUpdateRequest;
 import com.amadeus.flightapi.exception.AirportAlreadyExistException;
 import com.amadeus.flightapi.exception.AirportNotFoundException;
@@ -46,11 +47,10 @@ public class AirportService {
                 .collect(Collectors.toList());
     }
 
-    public String add(Airport airport){
-        if(airportRepository.existsById(airport.getId()))
-            return airportRepository.save(airport).getId();
-
-        throw new AirportAlreadyExistException(String.format("Airport already exists with id : %s", airport.getId()));
+    public String add(AirportCreateRequest airportCreateRequest){
+        return airportRepository
+                .save(new Airport(null, airportCreateRequest.code(), airportCreateRequest.city()))
+                .getId();
     }
 
     public String update(String airportId, AirportUpdateRequest airportUpdateRequest){
