@@ -3,8 +3,9 @@ package com.amadeus.flightapi.dto.converter;
 import com.amadeus.flightapi.dto.UserDto;
 import com.amadeus.flightapi.model.User;
 import com.amadeus.flightapi.util.ObjectConverter.Convertable;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class UserAndUserDtoConverter implements Convertable<User, UserDto> {
 
     @Override
