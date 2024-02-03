@@ -24,18 +24,17 @@ public class Flight {
     @Column(name = "departure_date", columnDefinition = "TIMESTAMP")
     LocalDateTime departureDate;
 
-    @Column(name = "return_date", columnDefinition = "TIMESTAMP")
-    LocalDateTime returnDate;
-
+    @Column(name = "price")
+    Double price;
     public Flight() {
     }
 
-    public Flight(String id, Airport departureAirport, Airport landingAirport, LocalDateTime departureDate, LocalDateTime returnDate) {
+    public Flight(String id, Airport departureAirport, Airport landingAirport, LocalDateTime departureDate, Double price) {
         this.id = id;
         this.departureAirport = departureAirport;
         this.landingAirport = landingAirport;
         this.departureDate = departureDate;
-        this.returnDate = returnDate;
+        this.price = price;
     }
 
     public String getId() {
@@ -70,11 +69,11 @@ public class Flight {
         this.departureDate = departureDate;
     }
 
-    public LocalDateTime getReturnDate() {
-        return returnDate;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setReturnDate(LocalDateTime returnDate) {
-        this.returnDate = returnDate;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

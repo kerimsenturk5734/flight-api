@@ -1,25 +1,14 @@
-package com.amadeus.flightapi.model;
+package com.amadeus.flightapi.dto;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name = "airports")
-public class Airport {
-    @Id
-    @GenericGenerator(name = "airport_id",  strategy = "com.amadeus.flightapi.model.UUIDGenerator")
-    @GeneratedValue(generator = "airport_id")
-    @Column(name = "id")
+public class AirportDto {
     private String id;
-    @Column(name = "code")
     private String code;
-    @Column(name = "city")
     private String city;
-
-    public Airport() {
+    public AirportDto() {
     }
 
-    public Airport(String id, String code, String city) {
+    public AirportDto(String id, String code, String city) {
         this.id = id;
         this.code = code;
         this.city = city;
