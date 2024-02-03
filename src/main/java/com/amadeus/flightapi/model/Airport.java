@@ -11,23 +11,34 @@ public class Airport {
     @GeneratedValue(generator = "airport_id")
     @Column(name = "id")
     private String id;
+    @Column(name = "code")
+    private String code;
     @Column(name = "city")
     private String city;
 
     public Airport() {
     }
 
-    public Airport(String id, String city) {
+    public Airport(String id, String code, String city) {
         this.id = id;
+        this.code = code;
         this.city = city;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public String getId() {
-        return id;
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getCity() {

@@ -10,7 +10,7 @@ public class AirportAndAirportDtoConverter implements Convertable<Airport, Airpo
         if(airport == null)
             return null;
 
-        return new AirportDto(airport.getId(), airport.getCity());
+        return new AirportDto(airport.getId(), airport.getCode(), airport.getCity());
     }
 
     @Override
@@ -18,6 +18,6 @@ public class AirportAndAirportDtoConverter implements Convertable<Airport, Airpo
         if(airportDto == null)
             return null;
 
-        return new Airport(airportDto.getId(), airportDto.getCity());
+        return new Airport(airportDto.getId(), airportDto.getCode(), airportDto.getCity());
     }
 }

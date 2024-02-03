@@ -21,7 +21,7 @@ public class FlightAndFlightDtoConverter implements Convertable<Flight, FlightDt
                 airportAndAirportDtoConverter.convert(flight.getDepartureAirport()),
                 airportAndAirportDtoConverter.convert(flight.getLandingAirport()),
                 flight.getDepartureDate(),
-                flight.getReturnDate());
+                flight.getPrice());
     }
 
     @Override
@@ -34,6 +34,6 @@ public class FlightAndFlightDtoConverter implements Convertable<Flight, FlightDt
                 airportAndAirportDtoConverter.deConvert(flightDto.getDepartureAirport()),
                 airportAndAirportDtoConverter.deConvert(flightDto.getLandingAirport()),
                 flightDto.getDepartureDate(),
-                flightDto.getReturnDate());
+                flightDto.getPrice());
     }
 }

@@ -9,17 +9,16 @@ public class FlightDto {
     AirportDto departureAirport;
     AirportDto landingAirport;
     LocalDateTime departureDate;
-    LocalDateTime returnDate;
-
+    Double price;
     public FlightDto() {
     }
 
-    public FlightDto(String id, AirportDto departureAirport, AirportDto landingAirport, LocalDateTime departureDate, LocalDateTime returnDate) {
+    public FlightDto(String id, AirportDto departureAirport, AirportDto landingAirport, LocalDateTime departureDate, Double price) {
         this.id = id;
         this.departureAirport = departureAirport;
         this.landingAirport = landingAirport;
         this.departureDate = departureDate;
-        this.returnDate = returnDate;
+        this.price = price;
     }
 
     public String getId() {
@@ -54,11 +53,11 @@ public class FlightDto {
         this.departureDate = departureDate;
     }
 
-    public LocalDateTime getReturnDate() {
-        return returnDate;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setReturnDate(LocalDateTime returnDate) {
-        this.returnDate = returnDate;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
