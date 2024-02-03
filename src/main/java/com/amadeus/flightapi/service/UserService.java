@@ -48,9 +48,9 @@ public class UserService {
 
     public String add(User user){
         if(userRepository.existsById(user.getId()))
-            return userRepository.save(user).getId();
+            throw new UserAlreadyExistException(String.format("User already exists with id : %s", user.getId()));
 
-        throw new UserAlreadyExistException(String.format("User already exists with id : %s", user.getId()));
+        return userRepository.save(user).getId();
     }
 
     public String update(String userId, UserUpdateRequest userUpdateRequest){

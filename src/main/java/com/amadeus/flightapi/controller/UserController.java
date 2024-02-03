@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "v1/api/users")
+@RequestMapping( "/v1/api/users")
 public class UserController {
     private final UserService userService;
     public UserController(UserService userService) {
@@ -58,7 +58,7 @@ public class UserController {
                 .body(new SuccessResult(String.format("User updated with id : %s", updatedUserId)));
     }
 
-    @DeleteMapping(name = "/delete/{userId}")
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<?> deleteUser(@Valid @PathVariable String userId){
         String deletedUserId = userService.delete(userId);
 
