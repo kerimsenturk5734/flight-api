@@ -35,7 +35,7 @@ public class User {
         return this.id;
     }
 
-    public void setUserId(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
