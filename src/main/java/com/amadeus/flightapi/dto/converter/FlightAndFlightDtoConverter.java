@@ -3,7 +3,9 @@ package com.amadeus.flightapi.dto.converter;
 import com.amadeus.flightapi.dto.FlightDto;
 import com.amadeus.flightapi.model.Flight;
 import com.amadeus.flightapi.util.ObjectConverter.Convertable;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FlightAndFlightDtoConverter implements Convertable<Flight, FlightDto> {
     private final AirportAndAirportDtoConverter airportAndAirportDtoConverter;
 

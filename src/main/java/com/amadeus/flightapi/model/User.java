@@ -9,8 +9,6 @@ import org.hibernate.annotations.GenericGenerator;
 public class User {
     @Id
     @Column(name = "id")
-    @GenericGenerator(name = "user_id", strategy = "com.amadeus.flightapi.model.UUIDGenerator")
-    @GeneratedValue(generator = "user_id")
     String id;
     @Column(name = "name")
     String name;
