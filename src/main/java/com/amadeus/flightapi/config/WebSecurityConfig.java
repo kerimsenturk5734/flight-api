@@ -45,14 +45,16 @@ public class WebSecurityConfig {
         return authProvider;
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         AtomicBoolean isAccessDenied = new AtomicBoolean(false);
         return httpSecurity
                 //Disable CSRF, Login Form
-                .cors(Customizer.withDefaults())
+                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
+                .headers(AbstractHttpConfigurer::disable)
 
                 //Authorize the requests coming to endpoints at the matchers pattern
                 .authorizeHttpRequests(x -> x
@@ -64,6 +66,8 @@ public class WebSecurityConfig {
 
                         //Allow swagger docs
                         .requestMatchers("**/api-docs/**", "**/swagger-ui/**").permitAll()
+
+                        .requestMatchers("/h2-console/**").permitAll()
 
                         //Allow search endpoint
                         .requestMatchers("**/api/flights/search").permitAll()

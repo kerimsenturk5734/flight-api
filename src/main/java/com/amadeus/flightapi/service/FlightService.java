@@ -12,6 +12,7 @@ import com.amadeus.flightapi.exception.FlightNotFoundException;
 import com.amadeus.flightapi.model.Airport;
 import com.amadeus.flightapi.model.Flight;
 import com.amadeus.flightapi.repository.FlightRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,16 +124,16 @@ public class FlightService {
         List<FlightCreateRequest> flightCreateRequestList =
                 List.of(
                         new FlightCreateRequest(
-                                "e376c405-37af-4385-be2b-e69464f5c3d2",
-                                "34cd2b8b-b9d6-4edd-be68-cdd03f0fc95a",
+                                "6cec1ec0-19e8-419c-8b6b-1cc2c5f5e4db",
+                                "e704fded-4f69-47b8-b31b-640067a00cfc",
                                 LocalDateTime.now().plusMonths(1), 1075.60),
                         new FlightCreateRequest(
-                                "e376c405-37af-4385-be2b-e69464f5c3d2",
-                                "34cd2b8b-b9d6-4edd-be68-cdd03f0fc95a",
+                                "7ac1da29-d66f-440c-8dec-75ff03f606c6",
+                                "eb1ab68e-ab93-4070-a5be-6cfac4371d18",
                                 LocalDateTime.now().plusMonths(1).plusDays(2), 750.12),
                         new FlightCreateRequest(
-                                "34cd2b8b-b9d6-4edd-be68-cdd03f0fc95a",
-                                "e376c405-37af-4385-be2b-e69464f5c3d2",
+                                "451ec264-7976-40c0-adda-6ec1d6df70e5",
+                                "e704fded-4f69-47b8-b31b-640067a00cfc",
                                 LocalDateTime.now().plusDays(1), 125.60)
                 );
 
@@ -175,5 +176,60 @@ public class FlightService {
         );
     }
 
+    public void addDefaultFlights() {
+        addFlightList(
+                List.of(
+                        new FlightCreateRequest(
+                                "6cec1ec0-19e8-419c-8b6b-1cc2c5f5e4db",
+                                "e704fded-4f69-47b8-b31b-640067a00cfc",
+                                LocalDateTime.now().plusDays(5).plusMinutes(45),
+                                425.45
+                        ),
+                        new FlightCreateRequest(
+                                "451ec264-7976-40c0-adda-6ec1d6df70e5",
+                                "0dadecff-3428-4df2-a9dc-8bdd57aa8c63",
+                                LocalDateTime.now().plusDays(7).plusHours(3).plusMinutes(45),
+                                712.90
+                        ),
+                        new FlightCreateRequest(
+                                "451ec264-7976-40c0-adda-6ec1d6df70e5",
+                                "e704fded-4f69-47b8-b31b-640067a00cfc",
+                                LocalDateTime.now().plusDays(1).plusMinutes(55),
+                                915.10
+                        ),
+                        new FlightCreateRequest(
+                                "7ac1da29-d66f-440c-8dec-75ff03f606c6",
+                                "eb1ab68e-ab93-4070-a5be-6cfac4371d18",
+                                LocalDateTime.now().plusDays(2).minusHours(3).plusMinutes(45),
+                                1525.30
+                        ),
+                        new FlightCreateRequest(
+                                "6cec1ec0-19e8-419c-8b6b-1cc2c5f5e4db",
+                                "e704fded-4f69-47b8-b31b-640067a00cfc",
+                                LocalDateTime.now().plusDays(10).plusMinutes(45),
+                                425.45
+                        ),
+                        new FlightCreateRequest(
+                                "451ec264-7976-40c0-adda-6ec1d6df70e5",
+                                "0dadecff-3428-4df2-a9dc-8bdd57aa8c63",
+                                LocalDateTime.now().plusDays(12).plusHours(3).plusMinutes(45),
+                                712.90
+                        ),
+                        new FlightCreateRequest(
+                                "451ec264-7976-40c0-adda-6ec1d6df70e5",
+                                "e704fded-4f69-47b8-b31b-640067a00cfc",
+                                LocalDateTime.now().plusDays(6).plusMinutes(55),
+                                915.10
+                        ),
+                        new FlightCreateRequest(
+                                "7ac1da29-d66f-440c-8dec-75ff03f606c6",
+                                "eb1ab68e-ab93-4070-a5be-6cfac4371d18",
+                                LocalDateTime.now().plusDays(7).minusHours(3).plusMinutes(45),
+                                1525.30
+                        )
+                )
+        );
+        logger.info("Flights added");
+    }
 
 }

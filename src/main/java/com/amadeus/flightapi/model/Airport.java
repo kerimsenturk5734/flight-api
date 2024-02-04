@@ -7,8 +7,6 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "airports")
 public class Airport {
     @Id
-    @GenericGenerator(name = "airport_id",  strategy = "com.amadeus.flightapi.model.UUIDGenerator")
-    @GeneratedValue(generator = "airport_id")
     @Column(name = "id")
     private String id;
     @Column(name = "code")

@@ -8,8 +8,11 @@ import com.amadeus.flightapi.dto.response.UserLoginResponse;
 import com.amadeus.flightapi.exception.UserAlreadyExistException;
 import com.amadeus.flightapi.exception.UserNotFoundException;
 import com.amadeus.flightapi.model.User;
+import com.amadeus.flightapi.model.enums.UserRole;
 import com.amadeus.flightapi.repository.UserRepository;
 import com.amadeus.flightapi.security.JwtTokenManager;
+import jakarta.annotation.PostConstruct;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +31,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenManager jwtTokenManager;
+    private final Logger logger = Logger.getLogger(UserService.class.getName());
     public UserService(UserRepository userRepository, UserAndUserDtoConverter userAndUserDtoConverter,
                        PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
                        JwtTokenManager jwtTokenManager) {
@@ -103,6 +108,26 @@ public class UserService {
                     jwtTokenManager.generate(userLoginRequest.userId()), getUserById(userLoginRequest.userId()));
 
         throw new UsernameNotFoundException("User Id or password incorrect");
+    }
+
+
+    @Scheduled(fixedDelay = Long.MAX_VALUE)
+    public void addDefaultUsers() {
+        //Add admin
+        add(new User(
+                "admin",
+                "admin",
+                "admin",
+                "admin", UserRole.ADMIN));
+
+        //Add user
+        add(new User(
+                "user",
+                "user",
+                "user",
+                "user", UserRole.USER));
+
+        logger.info("Users added");
     }
 
 }
