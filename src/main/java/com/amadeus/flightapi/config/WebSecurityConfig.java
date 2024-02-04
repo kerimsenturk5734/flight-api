@@ -65,6 +65,9 @@ public class WebSecurityConfig {
                         //Allow swagger docs
                         .requestMatchers("**/api-docs/**", "**/swagger-ui/**").permitAll()
 
+                        //Allow search endpoint
+                        .requestMatchers("**/api/flights/search").permitAll()
+
                         //Authenticate the all other requests coming to API except the endpoints indicated above
                         .requestMatchers("/v1/api/**").authenticated())
 

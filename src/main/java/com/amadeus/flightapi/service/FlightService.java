@@ -4,7 +4,10 @@ import com.amadeus.flightapi.dto.FlightDto;
 import com.amadeus.flightapi.dto.converter.AirportAndAirportDtoConverter;
 import com.amadeus.flightapi.dto.converter.FlightAndFlightDtoConverter;
 import com.amadeus.flightapi.dto.request.FlightCreateRequest;
+import com.amadeus.flightapi.dto.request.SearchFlightsRequest;
 import com.amadeus.flightapi.dto.request.UpdateFlightRequest;
+import com.amadeus.flightapi.dto.response.OneWaySearchResponse;
+import com.amadeus.flightapi.dto.response.TwoWaySearchResponse;
 import com.amadeus.flightapi.exception.FlightNotFoundException;
 import com.amadeus.flightapi.model.Airport;
 import com.amadeus.flightapi.model.Flight;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,8 +79,6 @@ public class FlightService {
                         flightCreateRequest.departureDate(),
                         flightCreateRequest.price()))
                 .getId();
-
-
     }
 
     public String update(String flightId, UpdateFlightRequest updateFlightRequest){
@@ -136,4 +138,42 @@ public class FlightService {
 
         addFlightList(flightCreateRequestList);
     }
+
+    public OneWaySearchResponse searchFlights(SearchFlightsRequest searchFlightsRequest){
+        if(searchFlightsRequest.returnDate().isPresent())
+            return searchTwoWayFlights(searchFlightsRequest);
+        else
+            return searchOneWayFlights(searchFlightsRequest);
+    }
+
+    private OneWaySearchResponse searchOneWayFlights(SearchFlightsRequest searchFlightsRequest){
+        return new OneWaySearchResponse(
+                flightRepository.findFlightsByDepartureDate_DateAndDepartureAirport_CityAndLandingAirport_City(
+                        searchFlightsRequest.goingDate(),
+                        searchFlightsRequest.departureCity(),
+                        searchFlightsRequest.landingCity())
+                        .stream()
+                        .map(flightAndFlightDtoConverter::convert)
+                        .collect(Collectors.toList())
+        );
+    }
+    private TwoWaySearchResponse searchTwoWayFlights(SearchFlightsRequest searchFlightsRequest){
+        SearchFlightsRequest returnRequest = reverseFlightRequest(searchFlightsRequest);
+
+        return new TwoWaySearchResponse(
+               searchOneWayFlights(searchFlightsRequest).getGoings(),
+                searchOneWayFlights(returnRequest).getGoings()
+        );
+    }
+
+    private SearchFlightsRequest reverseFlightRequest(SearchFlightsRequest searchFlightsRequest){
+        return new SearchFlightsRequest(
+                searchFlightsRequest.returnDate().get(),
+                Optional.of(searchFlightsRequest.goingDate()),
+                searchFlightsRequest.landingCity(),
+                searchFlightsRequest.departureCity()
+        );
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.amadeus.flightapi.controller;
 
 import com.amadeus.flightapi.dto.FlightDto;
 import com.amadeus.flightapi.dto.request.FlightCreateRequest;
+import com.amadeus.flightapi.dto.request.SearchFlightsRequest;
 import com.amadeus.flightapi.dto.request.UpdateFlightRequest;
 import com.amadeus.flightapi.service.FlightService;
 import com.amadeus.flightapi.util.SuccessResult;
@@ -69,5 +70,10 @@ public class FlightController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .body(new SuccessResult(String.format("Flight deleted with id : %s", deletedFlightId)));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchFlights(SearchFlightsRequest searchFlightsRequest){
+        return ResponseEntity.ok().body(flightService.searchFlights(searchFlightsRequest));
     }
 }
