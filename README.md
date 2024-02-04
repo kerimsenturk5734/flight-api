@@ -5,7 +5,7 @@ You can see the dummy users, airports, flights in here.
 `username` --> `sa`</br>
 `password` --> `password`
 
-![My image](./images/h2-access.png)
+![My image](./images/h2-access.PNG)
 
 ### SWAGGER:
 You can access the swagger docs at http://localhost:8080/swagger-ui/index.html
