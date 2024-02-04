@@ -9,9 +9,13 @@ import com.amadeus.flightapi.exception.FlightNotFoundException;
 import com.amadeus.flightapi.model.Airport;
 import com.amadeus.flightapi.model.Flight;
 import com.amadeus.flightapi.repository.FlightRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +24,7 @@ public class FlightService {
     private final FlightAndFlightDtoConverter flightAndFlightDtoConverter;
     private final AirportService airportService;
     private final AirportAndAirportDtoConverter airportAndAirportDtoConverter;
+    private final Logger logger = Logger.getLogger(FlightService.class.getName());
     public FlightService(FlightRepository flightRepository, FlightAndFlightDtoConverter flightAndFlightDtoConverter,
                          AirportService airportService, AirportAndAirportDtoConverter airportAndAirportDtoConverter) {
         this.flightRepository = flightRepository;
@@ -61,6 +66,7 @@ public class FlightService {
         Airport landingAirport = airportAndAirportDtoConverter
                 .deConvert(airportService.getAirportById(flightCreateRequest.landingAirportId()));
 
+        logger.info("Flight added...");
         return  flightRepository.save(
                 new Flight(
                         null,
@@ -69,6 +75,8 @@ public class FlightService {
                         flightCreateRequest.departureDate(),
                         flightCreateRequest.price()))
                 .getId();
+
+
     }
 
     public String update(String flightId, UpdateFlightRequest updateFlightRequest){
@@ -99,5 +107,33 @@ public class FlightService {
         flightRepository.deleteById(flightId);
 
         return flightId;
+    }
+
+    @Transactional
+    public void addFlightList(List<FlightCreateRequest> flightList){
+        logger.info("Flights adding...");
+        flightList.forEach(this::add);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // Runs every day at midnight
+    protected void scheduledTest(){
+        logger.info("Scheduled test");
+        List<FlightCreateRequest> flightCreateRequestList =
+                List.of(
+                        new FlightCreateRequest(
+                                "e376c405-37af-4385-be2b-e69464f5c3d2",
+                                "34cd2b8b-b9d6-4edd-be68-cdd03f0fc95a",
+                                LocalDateTime.now().plusMonths(1), 1075.60),
+                        new FlightCreateRequest(
+                                "e376c405-37af-4385-be2b-e69464f5c3d2",
+                                "34cd2b8b-b9d6-4edd-be68-cdd03f0fc95a",
+                                LocalDateTime.now().plusMonths(1).plusDays(2), 750.12),
+                        new FlightCreateRequest(
+                                "34cd2b8b-b9d6-4edd-be68-cdd03f0fc95a",
+                                "e376c405-37af-4385-be2b-e69464f5c3d2",
+                                LocalDateTime.now().plusDays(1), 125.60)
+                );
+
+        addFlightList(flightCreateRequestList);
     }
 }
