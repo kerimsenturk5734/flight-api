@@ -2,11 +2,19 @@ package com.amadeus.flightapi.service;
 
 import com.amadeus.flightapi.dto.UserDto;
 import com.amadeus.flightapi.dto.converter.UserAndUserDtoConverter;
+import com.amadeus.flightapi.dto.request.UserLoginRequest;
 import com.amadeus.flightapi.dto.request.UserUpdateRequest;
+import com.amadeus.flightapi.dto.response.UserLoginResponse;
 import com.amadeus.flightapi.exception.UserAlreadyExistException;
 import com.amadeus.flightapi.exception.UserNotFoundException;
 import com.amadeus.flightapi.model.User;
 import com.amadeus.flightapi.repository.UserRepository;
+import com.amadeus.flightapi.security.JwtTokenManager;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +24,17 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final UserAndUserDtoConverter userAndUserDtoConverter;
-    public UserService(UserRepository userRepository, UserAndUserDtoConverter userAndUserDtoConverter) {
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenManager jwtTokenManager;
+    public UserService(UserRepository userRepository, UserAndUserDtoConverter userAndUserDtoConverter,
+                       PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
+                       JwtTokenManager jwtTokenManager) {
         this.userRepository = userRepository;
         this.userAndUserDtoConverter = userAndUserDtoConverter;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenManager = jwtTokenManager;
     }
 
     public UserDto getUserById(String userId){
@@ -50,6 +66,7 @@ public class UserService {
         if(userRepository.existsById(user.getId()))
             throw new UserAlreadyExistException(String.format("User already exists with id : %s", user.getId()));
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user).getId();
     }
 
@@ -58,7 +75,15 @@ public class UserService {
 
         user.setName(userUpdateRequest.name().orElse(user.getName()));
         user.setSurname(userUpdateRequest.surname().orElse(user.getSurname()));
-        user.setPassword(userUpdateRequest.name().orElse(user.getPassword()));
+
+        //Set don't updated password as initial this pwd already encrypted
+        String pwd = user.getPassword();
+
+        //Encrypt the raw password coming from optional if presents
+        if(userUpdateRequest.password().isPresent())
+            pwd = passwordEncoder.encode(userUpdateRequest.password().get());
+
+        user.setPassword(pwd);
 
         return userRepository.save(user).getId();
     }
@@ -66,6 +91,18 @@ public class UserService {
     public String delete(String userId){
         userRepository.deleteById(getRawUserById(userId).getId());
         return userId;
+    }
+
+    public UserLoginResponse login(UserLoginRequest userLoginRequest){
+        Authentication auth = authenticationManager
+                .authenticate(new
+                        UsernamePasswordAuthenticationToken(userLoginRequest.userId(), userLoginRequest.password()));
+
+        if(auth.isAuthenticated())
+            return new UserLoginResponse(
+                    jwtTokenManager.generate(userLoginRequest.userId()), getUserById(userLoginRequest.userId()));
+
+        throw new UsernameNotFoundException("User Id or password incorrect");
     }
 
 }

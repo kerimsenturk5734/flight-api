@@ -5,15 +5,18 @@ import com.amadeus.flightapi.dto.request.FlightCreateRequest;
 import com.amadeus.flightapi.dto.request.UpdateFlightRequest;
 import com.amadeus.flightapi.service.FlightService;
 import com.amadeus.flightapi.util.SuccessResult;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/v1/api/flights")
 public class FlightController {
@@ -23,7 +26,7 @@ public class FlightController {
         this.flightService = flightService;
     }
 
-
+    @PreAuthorize("hasAuthority(@ROLES.ADMIN)")
     @PostMapping("/add")
     public ResponseEntity<?> addAirport(@Valid @RequestBody FlightCreateRequest flightCreateRequest){
         String id = flightService.add(flightCreateRequest);
@@ -47,6 +50,7 @@ public class FlightController {
         return ResponseEntity.ok(flightDtoList);
     }
 
+    @PreAuthorize("hasAuthority(@ROLES.ADMIN)")
     @PutMapping("/update/{flightId}")
     public ResponseEntity<?> updateAirport(@PathVariable String flightId,
                                            @Valid @RequestBody UpdateFlightRequest updateFlightRequest){
@@ -57,6 +61,7 @@ public class FlightController {
                 .body(new SuccessResult(String.format("Flight updated with id : %s", updatedFlightId)));
     }
 
+    @PreAuthorize("hasAuthority(@ROLES.ADMIN)")
     @DeleteMapping("/delete/{flightId}")
     public ResponseEntity<?> deleteAirport(@Valid @PathVariable String flightId){
         String deletedFlightId = flightService.delete(flightId);
